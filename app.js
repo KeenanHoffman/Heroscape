@@ -231,3 +231,27 @@ $(document).click(function(event)  {
     console.log('no moves left');
   }
 });
+
+
+
+function attack() {
+  if (turn === player1) {
+    if (Number(coordinatesPlayer1[0]) === Number(coordinatesPlayer2[0]) && Number(coordinatesPlayer1[1]) === Number(coordinatesPlayer2[1])+2) {
+      console.log('up attack');
+    } else if (Number(coordinatesPlayer1[0]) === Number(coordinatesPlayer2[0]) && Number(coordinatesPlayer1[1]) === Number(coordinatesPlayer2[1])-2) {
+      console.log('down attack');
+    } else if (Number(coordinatesPlayer1[0]) === Number(coordinatesPlayer2[0])-1 && Number(coordinatesPlayer1[1]) === Number(coordinatesPlayer2[1])-1) {
+      console.log('lower right attack');
+    } else if (Number(coordinatesPlayer1[0]) === Number(coordinatesPlayer2[0])+1 && Number(coordinatesPlayer1[1]) === Number(coordinatesPlayer2[1])-1) {
+      console.log('lower left attack');
+    } else if (Number(coordinatesPlayer1[0]) === Number(coordinatesPlayer2[0])-1 && Number(coordinatesPlayer1[1]) === Number(coordinatesPlayer2[1])+1) {
+      console.log('upper right attack');
+    } else if (Number(coordinatesPlayer1[0]) === Number(coordinatesPlayer2[0])+1 && Number(coordinatesPlayer1[1]) === Number(coordinatesPlayer2[1])+1) {
+      console.log('lower right attack');
+    } else {
+      console.log('no valid attack');
+    }
+  } else if (turn === player2) {
+    
+  }
+}
