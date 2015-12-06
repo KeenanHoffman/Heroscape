@@ -20,31 +20,44 @@ var player2 = 'player2';
 //sets up the game board
 $(document).ready(createGrid);
 function createGrid() {
-  for(var i=0; i<30; i++) {
-    var row = 'row' + i;
+  for(var r=0; r<30; r++) {
+    var row = 'row' + r;
     $('.board').append('<div class="row"></div>');
     $('div').last().addClass(row).css('display', 'block').css('height', '1.5rem').css('text-align', 'center');
-
     var $row = $('.'+row);
     var rowChild = '.' + row + ' div';
-
-    for(var j=0; j<15; j++) {
-      if (i % 2 === 0) {
+    //console.log(rowChild);
+    for(var i=0; i<15; i++) {
+      //if i is even
+      if (r%2 === 0) {
         $row.css('margin-left', '0').append('<div></div>');
         $(rowChild).last().css('width', '2rem').css('height', '2rem').css('display', 'inline-block').css('margin', '1.5rem').append('<img id="tile" src="grass.png"/>');
-        $('img').last().addClass((j*2)+','+i);
-
+        y = r/2;
+        x = i*2;
+        xyz = cubeGrid(x, y);
+        $('img').last().attr('data', xyz);
+        console.log(xyz);
+      //if i is odd
       } else {
         $row.css('margin-left', '5rem').append('<div></div>');
         $(rowChild).last().css('width', '2rem').css('height', '2rem').css('display', 'inline-block').css('margin', '1.5rem').append('<img id="tile" src="grass.png"/>');
-        $('img').last().addClass( (j*2)+1+','+i);
+        y = (r-1)/2;
+        x = i*2+1;
+        xyz = cubeGrid(x, y);
+        $('img').last().attr('data', xyz);
+        console.log(xyz);
       }
     }
   }
   $('img').css('width', '3rem').css('text-align', 'center').css('margin', '-.5rem 0 0 -.5rem');
   chooseFirstPlayer();
 }
-
+function cubeGrid(col, row) {
+  var x = col;
+  var z = row - (col - (col&1)) / 2;
+  var y = -x-z;
+  return [x,y,z];
+}
 //randomly selects a starting player
 function chooseFirstPlayer() {
   var randomNum = Math.floor(Math.random()*10)+1;
@@ -232,26 +245,53 @@ $(document).click(function(event)  {
   }
 });
 
+var player1Range = 4;
 
+$('#attack').click(function() {
+  attack();
+});
 
 function attack() {
   if (turn === player1) {
-    if (Number(coordinatesPlayer1[0]) === Number(coordinatesPlayer2[0]) && Number(coordinatesPlayer1[1]) === Number(coordinatesPlayer2[1])+2) {
-      console.log('up attack');
-    } else if (Number(coordinatesPlayer1[0]) === Number(coordinatesPlayer2[0]) && Number(coordinatesPlayer1[1]) === Number(coordinatesPlayer2[1])-2) {
-      console.log('down attack');
-    } else if (Number(coordinatesPlayer1[0]) === Number(coordinatesPlayer2[0])-1 && Number(coordinatesPlayer1[1]) === Number(coordinatesPlayer2[1])-1) {
-      console.log('lower right attack');
-    } else if (Number(coordinatesPlayer1[0]) === Number(coordinatesPlayer2[0])+1 && Number(coordinatesPlayer1[1]) === Number(coordinatesPlayer2[1])-1) {
-      console.log('lower left attack');
-    } else if (Number(coordinatesPlayer1[0]) === Number(coordinatesPlayer2[0])-1 && Number(coordinatesPlayer1[1]) === Number(coordinatesPlayer2[1])+1) {
-      console.log('upper right attack');
-    } else if (Number(coordinatesPlayer1[0]) === Number(coordinatesPlayer2[0])+1 && Number(coordinatesPlayer1[1]) === Number(coordinatesPlayer2[1])+1) {
-      console.log('lower right attack');
-    } else {
-      console.log('no valid attack');
+    var attackDistanceX = Math.abs(Number(coordinatesPlayer1[0]) - Number(coordinatesPlayer2[0]));
+    var attackDistanceY = Math.abs(Number(coordinatesPlayer1[1]) - Number(coordinatesPlayer2[1]));
+    console.log(attackDistanceX, attackDistanceY);
+    if (attackDistanceX % 2 === 0 && attackDistanceX !== 0) {
+      attackDistanceX = attackDistanceX+2;
     }
+    if (attackDistanceY === 0) {
+      attackDistanceY = attackDistanceY+2;
+    }
+    if(attackDistanceY % 2 === 0 && attackDistanceX !== attackDistanceY) {
+      attackDistanceY = attackDistanceY+2;
+    }
+    if(attackDistanceX % 2 === 0 && attackDistanceY % 2 === 0) {
+      attackDistanceY = attackDistanceY-2;
+    }
+    // if(attackDistanceX % 2 === 0 && attackDistanceY % 2 === 0 && attackDistanceY === attackDistanceX) {
+    //   attackDistanceY = attackDistanceY-2;
+    //   console.log('y+2');
+    // }
+    console.log(attackDistanceX, attackDistanceY);
+    if (attackDistanceX + attackDistanceY <= player1Range*2) {
+      console.log('attacking');
+    }
+    // if (Number(coordinatesPlayer1[0]) === Number(coordinatesPlayer2[0]) && Number(coordinatesPlayer1[1]) === Number(coordinatesPlayer2[1])+2) {
+    //   console.log('up attack');
+    // } else if (Number(coordinatesPlayer1[0]) === Number(coordinatesPlayer2[0]) && Number(coordinatesPlayer1[1]) === Number(coordinatesPlayer2[1])-2) {
+    //   console.log('down attack');
+    // } else if (Number(coordinatesPlayer1[0]) === Number(coordinatesPlayer2[0])-1 && Number(coordinatesPlayer1[1]) === Number(coordinatesPlayer2[1])-1) {
+    //   console.log('lower right attack');
+    // } else if (Number(coordinatesPlayer1[0]) === Number(coordinatesPlayer2[0])+1 && Number(coordinatesPlayer1[1]) === Number(coordinatesPlayer2[1])-1) {
+    //   console.log('lower left attack');
+    // } else if (Number(coordinatesPlayer1[0]) === Number(coordinatesPlayer2[0])-1 && Number(coordinatesPlayer1[1]) === Number(coordinatesPlayer2[1])+1) {
+    //   console.log('upper right attack');
+    // } else if (Number(coordinatesPlayer1[0]) === Number(coordinatesPlayer2[0])+1 && Number(coordinatesPlayer1[1]) === Number(coordinatesPlayer2[1])+1) {
+    //   console.log('lower right attack');
+    // } else {
+    //   console.log('no valid attack');
+    // }
   } else if (turn === player2) {
-    
+
   }
 }
